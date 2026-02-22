@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}AI Image Analyzer{% endblock %}
+
+{% block content %}
+<header class="site-header">
+    <h1>AI Image Analyzer</h1>
+    <p class="subtitle">Choose an algorithm, upload a photo, get instant results.</p>
+</header>
+
+<div class="card">
+    <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+
+        <p class="picker-label">Select algorithm</p>
+        <div class="scenario-picker">
+            {% for key, sc in scenarios.items() %}
+            <label class="scenario-card{% if key == active_scenario %} selected{% endif %}">
+                <input type="radio" name="scenario" value="{{ key }}"
+                       {% if key == active_scenario %}checked{% endif %}>
+                <span class="scenario-name">{{ sc.name }}</span>
+                <span class="scenario-desc">{{ sc.description }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="upload-area" id="upload-area">
+            <input type="file" name="image" id="file-input"
+                   accept="image/jpeg,image/png,image/webp" required>
+            <div class="upload-placeholder" id="placeholder">
+                <span class="upload-icon">🖼️</span>
+                <span class="main-text">Click to select or drag image here</span>
+                <span class="hint">JPG, PNG, WEBP — up to 16 MB</span>
+            </div>
+            <img id="preview-img" src="" alt="Preview">
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">Analyze image</button>
+    </form>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <span>Sending to AI, please wait…</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const fileInput   = document.getElementById('file-input');
+    const previewImg  = document.getElementById('preview-img');
+    const placeholder = document.getElementById('placeholder');
+    const form        = document.getElementById('upload-form');
+    const loading     = document.getElementById('loading');
+    const submitBtn   = document.getElementById('submit-btn');
+    const uploadArea  = document.getElementById('upload-area');
+
+    document.querySelectorAll('.scenario-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        });
+    });
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    uploadArea.addEventListener('dragover',  e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+    uploadArea.addEventListener('dragleave', ()  => uploadArea.classList.remove('drag-over'));
+    uploadArea.addEventListener('drop',      e  => { e.preventDefault(); uploadArea.classList.remove('drag-over'); });
+
+    form.addEventListener('submit', () => {
+        submitBtn.disabled = true;
+        form.style.display = 'none';
+        loading.style.display = 'flex';
+    });
+</script>
+{% endblock %}

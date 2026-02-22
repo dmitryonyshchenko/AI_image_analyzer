@@ -1,0 +1,13 @@
+# Environment / secrets — never commit these
+.env
+
+# Error log (no user data, but not needed in repo)
+last_error.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/

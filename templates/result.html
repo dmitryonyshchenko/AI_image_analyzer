@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ scenario.name }} — Result{% endblock %}
+
+{% block content %}
+<header class="site-header">
+    <h1>🔍 {{ scenario.name }}</h1>
+</header>
+
+<div class="card">
+
+    <!-- Annotated (or original) image, embedded as base64 — no server files kept -->
+    {% if show_image and image_b64 %}
+    <div class="result-image-wrap">
+        <img src="data:image/{{ img_mime }};base64,{{ image_b64 }}"
+             alt="Annotated image" class="result-image">
+    </div>
+    {% endif %}
+
+    <!-- Social share links -->
+    <div class="share-links">
+        <span class="share-label">Share this tool:</span>
+        <a class="share-btn" href="#" onclick="shareOn('twitter');   return false;">𝕏 Twitter</a>
+        <a class="share-btn" href="#" onclick="shareOn('facebook');  return false;">Facebook</a>
+        <a class="share-btn" href="#" onclick="shareOn('telegram');  return false;">Telegram</a>
+        <a class="share-btn" href="#" onclick="shareOn('linkedin');  return false;">LinkedIn</a>
+    </div>
+
+    <!-- Optional constant text (e.g. ruler joke, disclaimers) -->
+    {% if scenario.constant_text %}
+    <div class="constant-text">{{ scenario.constant_text }}</div>
+    {% endif %}
+
+    <!-- Result table -->
+    {% if scenario.show_result_table and result_table %}
+    <table class="result-table">
+        {% for row in result_table %}
+        <tr class="{{ 'metadata-row' if row.type == 'metadata' else '' }}">
+            <td class="rt-field">{{ row.field }}</td>
+            <td class="rt-value">
+                {%- if row.type == 'link' and row.value and row.value != '—' -%}
+                    <a href="{{ row.value }}" target="_blank" rel="noopener noreferrer">{{ row.value }}</a>
+                {%- else -%}
+                    {{ row.value }}
+                {%- endif -%}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <a href="/" class="btn-back">← Analyze another image</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function shareOn(network) {
+    const url  = encodeURIComponent(window.location.origin + '/');
+    const text = encodeURIComponent('Check out this free AI Image Analyzer!');
+    const links = {
+        twitter:  `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    };
+    window.open(links[network], '_blank', 'width=620,height=450,noopener');
+}
+</script>
+{% endblock %}

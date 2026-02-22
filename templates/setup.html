@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Setup Required — AI Image Analyzer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="setup-box">
+        <div class="setup-icon">🔑</div>
+        <h2>API Key Required</h2>
+        <p class="setup-desc">
+            This app uses <strong>Google Gemini</strong> to analyze images.
+            A <strong>free</strong> API key is required.
+        </p>
+
+        <ol class="setup-steps">
+            <li>
+                Go to
+                <a href="https://aistudio.google.com/apikey" target="_blank">
+                    aistudio.google.com/apikey
+                </a>
+                — sign in with Google and click <strong>Create API key</strong>.
+                The free tier is sufficient.
+            </li>
+            <li>
+                In the project folder, copy the example env file:
+                <code class="code-block">cp .env.example .env</code>
+            </li>
+            <li>
+                Open <code>.env</code> in a <strong>text editor</strong> and replace the placeholder:
+                <code class="code-block">GEMINI_API_KEY=AIzaSy…your_key_here</code>
+            </li>
+            <li>Restart the server: <code>python app.py</code></li>
+        </ol>
+
+        <p class="setup-warning">
+            ⚠️ <strong>Never paste your key into a chat, email, or AI assistant.</strong>
+            Google automatically detects and revokes keys that appear in shared text.
+            Always enter the key directly into <code>.env</code> in your editor.
+        </p>
+
+        <p class="setup-note">
+            On hosted environments (Render, Railway, Fly.io) set
+            <code>GEMINI_API_KEY</code> as an environment variable in the hosting
+            dashboard instead of using a <code>.env</code> file.
+        </p>
+
+        <a href="/" class="btn-submit setup-reload">↻ Reload</a>
+    </div>
+</div>
+{% endblock %}

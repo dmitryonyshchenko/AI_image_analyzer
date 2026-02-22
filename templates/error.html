@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Error — AI Image Analyzer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="error-box">
+        <div class="error-icon">⚠️</div>
+        <h2>Something went wrong</h2>
+        <p>{{ message }}</p>
+        <a href="/" class="btn-back">← Try again</a>
+    </div>
+</div>
+{% endblock %}
