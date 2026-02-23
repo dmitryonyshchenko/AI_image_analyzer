@@ -6,7 +6,7 @@ import traceback
 import importlib
 from datetime import datetime
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response
 from dotenv import load_dotenv
 from PIL import Image as PILImage
 
@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB
 
 # Only static file serving bypasses the API-key check
-_NO_KEY_ALLOWED = {"static"}
+_NO_KEY_ALLOWED = {"static", "robots_txt"}
 
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
 ERROR_LOG          = "last_error.log"
@@ -98,6 +98,11 @@ def _to_b64(path: str) -> str | None:
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
+
+@app.route("/robots.txt")
+def robots_txt():
+    return Response("User-agent: *\nDisallow: /\n", mimetype="text/plain")
+
 
 @app.route("/")
 def index():
