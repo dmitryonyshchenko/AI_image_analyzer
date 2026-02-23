@@ -17,6 +17,9 @@
     <footer class="site-footer-bottom">
         <p>
             {{ site.footer_tagline }}
+            {% if site.footer_demo_url %}
+            &nbsp;·&nbsp; <a href="{{ site.footer_demo_url }}" target="_blank" rel="noopener">Live Demo</a>
+            {% endif %}
             {% if site.footer_git_url %}
             &nbsp;·&nbsp; <a href="{{ site.footer_git_url }}" target="_blank" rel="noopener">GitHub</a>
             {% endif %}

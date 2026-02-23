@@ -9,7 +9,9 @@ SITE_CONFIG = {
         "This is an AI capabilities demonstrator, developed entirely using prompt coding "
         "with Claude Sonnet 4.6 (claude.ai/code)."
     ),
-    # GitHub URL — fill in when the project is published
+    # Live demo URL
+    "footer_demo_url": "https://ai-image-analyzer-glmm.onrender.com",
+    # GitHub URL
     "footer_git_url": "https://github.com/dmitryonyshchenko/AI_image_analyzer",
     "footer_author": "Dmitry Onyshchenko",
     # Rough estimate of total prompt-engineering effort for the project
