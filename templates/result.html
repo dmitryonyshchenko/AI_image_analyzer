@@ -16,13 +16,16 @@
     </div>
     {% endif %}
 
-    <!-- Social share links -->
-    <div class="share-links">
-        <span class="share-label">Share this tool:</span>
-        <a class="share-btn" href="#" onclick="shareOn('twitter');   return false;">𝕏 Twitter</a>
-        <a class="share-btn" href="#" onclick="shareOn('facebook');  return false;">Facebook</a>
-        <a class="share-btn" href="#" onclick="shareOn('telegram');  return false;">Telegram</a>
-        <a class="share-btn" href="#" onclick="shareOn('linkedin');  return false;">LinkedIn</a>
+    <!-- Share section -->
+    <div class="share-section">
+        <button class="btn-share" onclick="shareResult()">📤 Share result</button>
+        <div class="share-links">
+            <span class="share-label">or:</span>
+            <a class="share-btn" href="#" onclick="shareOn('telegram');  return false;">Telegram</a>
+            <a class="share-btn" href="#" onclick="shareOn('twitter');   return false;">𝕏 Twitter</a>
+            <a class="share-btn" href="#" onclick="shareOn('whatsapp');  return false;">WhatsApp</a>
+            <a class="share-btn" id="btn-copy" href="#" onclick="copyResult(); return false;">📋 Copy text</a>
+        </div>
     </div>
 
     <!-- Optional constant text (e.g. ruler joke, disclaimers) -->
@@ -54,16 +57,66 @@
 
 {% block scripts %}
 <script>
+const SCENARIO_NAME = {{ scenario.name | tojson }};
+const SITE_URL      = {{ site.footer_demo_url | tojson }};
+const IMAGE_B64     = {{ image_b64 | tojson if image_b64 else 'null' }};
+const IMG_MIME      = {{ img_mime | tojson }};
+const RESULT_ROWS   = {{ result_table | tojson if result_table else '[]' }};
+
+function buildText() {
+    const lines = [`🔍 ${SCENARIO_NAME} — AI Image Analyzer`, ''];
+    RESULT_ROWS.forEach(r => {
+        if (r.type !== 'link') lines.push(`${r.field}: ${r.value}`);
+    });
+    lines.push('', `Analyzed for free at: ${SITE_URL}`);
+    return lines.join('\n');
+}
+
+function base64ToFile(b64, mime) {
+    const binary = atob(b64);
+    const arr = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+    return new File([arr], `ai_result.${mime}`, { type: `image/${mime}` });
+}
+
+async function shareResult() {
+    const text = buildText();
+    const shareData = { title: `${SCENARIO_NAME} — AI Image Analyzer`, text, url: SITE_URL };
+
+    if (IMAGE_B64) {
+        try {
+            const file = base64ToFile(IMAGE_B64, IMG_MIME);
+            if (navigator.canShare && navigator.canShare({ files: [file] }))
+                shareData.files = [file];
+        } catch(e) {}
+    }
+
+    if (navigator.share) {
+        try { await navigator.share(shareData); return; } catch(e) {
+            if (e.name === 'AbortError') return;
+        }
+    }
+    // Fallback: copy text to clipboard
+    copyResult();
+}
+
 function shareOn(network) {
-    const url  = encodeURIComponent(window.location.origin + '/');
-    const text = encodeURIComponent('Check out this free AI Image Analyzer!');
+    const url  = encodeURIComponent(SITE_URL);
+    const text = encodeURIComponent(buildText());
     const links = {
         twitter:  `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
         telegram: `https://t.me/share/url?url=${url}&text=${text}`,
-        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
     };
     window.open(links[network], '_blank', 'width=620,height=450,noopener');
+}
+
+function copyResult() {
+    const btn = document.getElementById('btn-copy');
+    navigator.clipboard.writeText(buildText()).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy text', 2000);
+    });
 }
 </script>
 {% endblock %}
