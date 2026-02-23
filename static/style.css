@@ -362,32 +362,6 @@ body {
     font-weight: 500;
 }
 
-/* ── Share section ── */
-.share-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 18px 0;
-}
-.btn-share {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 20px;
-    border-radius: 999px;
-    border: none;
-    background: #4f8ef7;
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.18s, transform 0.1s;
-    white-space: nowrap;
-}
-.btn-share:hover  { background: #3a78e0; }
-.btn-share:active { transform: scale(0.97); }
-
 /* ── Social share links ── */
 .share-links {
     display: flex;
