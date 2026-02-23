@@ -15,7 +15,9 @@ SITE_CONFIG = {
     # Rough estimate of total prompt-engineering effort for the project
     "footer_effort": "~8 hours of prompt coding",
     "footer_model_note": (
-        "This project uses free AI models. "
+        "This project uses free AI models and hosting by default. "
         "Speed and recognition quality may vary."
     ),
+    # Presentation download link
+    "footer_presentation_url": "/static/AI_Image_Analyzer_Presentation.pptx",
 }
