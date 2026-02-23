@@ -10,7 +10,7 @@ SITE_CONFIG = {
         "with Claude Sonnet 4.6 (claude.ai/code)."
     ),
     # GitHub URL — fill in when the project is published
-    "footer_git_url": "https://github.com/dmitryonyshchenko/AI_image_recpgnizer",
+    "footer_git_url": "https://github.com/dmitryonyshchenko/AI_image_analyzer",
     "footer_author": "Dmitry Onyshchenko",
     # Rough estimate of total prompt-engineering effort for the project
     "footer_effort": "~8 hours of prompt coding",
